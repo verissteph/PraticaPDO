@@ -24,10 +24,16 @@ try {
 
 //--------------------------DELETE E UPDATE------------------------------------
 //variavel comando vai receber a variavel PDO q está acessando o prepare para deletar da tabela pessoa onde o id está sendo chamado de :id
-$comando = $pdo ->prepare("DELETE FROM pessoa WHERE id=:id"); 
+//$comando = $pdo ->prepare("DELETE FROM pessoa WHERE id=:id"); 
 //atribuimos qual o id que vamos deletar
-$id = 3;
+//$id = 3;
 //agora esta substituindo o id chamado pela variavel id que foi definida como sendo o id 3
-$comando ->bindValue(":id",$id);
+//$comando ->bindValue(":id",$id);
 // aqui executamos o comando.
+//$comando->execute();
+
+//variavel comando vai receber a variavel PDO que irá acessar o preparo de atualização do campo email da tabela pessoa a partir do id chamado.
+$comando = $pdo->prepare("UPDATE pessoa SET email=:email WHERE id=:id");
+$comando->bindValue(":email", "carla@gmail.com");
+$comando->bindValue(":id", 1);
 $comando->execute();
