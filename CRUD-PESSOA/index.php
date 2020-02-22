@@ -21,23 +21,21 @@ $p = new Pessoa("crudpdo", "localhost", "root", "");
         <section id="esquerdo">
             <?php
             //colher todas as infos que foram colocadas nos inputs (caixinhas)
-                if(isset($_POST['nome'])){ //se existir algo no campo nome
-                    $nome = addslashes($_POST['nome']); // addslasches serve para manter a info mais segura, ela introduz caract especiais 
-                    $telefone = addslashes($_POST['telefone']);
-                    $email = addslashes($_POST['email']);
-                 //evitar erros antes de enviar para ser cadastrada
-                    if( !empty($nome) && !empty($telefone) && !empty($email) ){ //se todos os campos estiverem preenchidos
-                        //verificando se existe o cadastro e cadastrando 
-                        if(!$p->cadastrarPessoa($nome,$telefone,$email)){ //se o retorno da função for FALSE, nós saberemos que já existe o email cadastrado
-                            echo "Email ja cadastrado";
-                        }
-                        } 
-                        else 
-                        {
-                         echo "Preencha todos os campos!";
-                            }
+            if (isset($_POST['nome'])) { //se existir algo no campo nome
+                $nome = addslashes($_POST['nome']); // addslasches serve para manter a info mais segura, ela introduz caract especiais 
+                $telefone = addslashes($_POST['telefone']);
+                $email = addslashes($_POST['email']);
+                //evitar erros antes de enviar para ser cadastrada
+                if (!empty($nome) && !empty($telefone) && !empty($email)) { //se todos os campos estiverem preenchidos
+                    //verificando se existe o cadastro e cadastrando 
+                    if (!$p->cadastrarPessoa($nome, $telefone, $email)) { //se o retorno da função for FALSE, nós saberemos que já existe o email cadastrado
+                        echo "Email ja cadastrado";
                     }
-                
+                } else {
+                    echo "Preencha todos os campos!";
+                }
+            }
+
             ?>
             <form action="" method="post">
                 <h2>Cadastrar Pessoa</h2>
@@ -69,15 +67,17 @@ $p = new Pessoa("crudpdo", "localhost", "root", "");
                                 echo "<td>" . $v . "</td>"; //vai exibir as informações de nome,telefone e email 
                             }
                         }
-                        ?>
-                        <td>
-                            <a href="">Editar</a><a href="">Excluir</a>
+                ?>
+                        <td> 
+                            <a href="">Editar</a>
+                            <a href="index.php?id=<?php echo $dados[$i]['id']; //ao colocar a propria pagina eu estou atualizando ela e ao atualizar queremos ter como retorno um ID de cada pessoa, ao colocar '?id=' estamos criando um metodo GET e sempre que fazemos isso em um link nós estamos criando uma variável que pode ser pega atraves do GET. Abrimos a tag PHP depos do id para acessarmos o array onde os dados de cada pessoa está armazenado, no caso o array $dados que a cada interação [$i] mostrara o ['id'] da pessoa.
+                            ?>">Excluir</a>
                         </td>
-                        <?php
+                <?php
                         echo "</tr>";
-                        //faz o td dentro do FOR porque precisa repetir os botoes a cada linha repetida 
+                        //faz o tr dentro do FOR porque precisa repetir os botoes a cada linha repetida 
                     }
-                } else{ //senao se o array está vazio
+                } else { //senao se o array está vazio
                     echo "Ainda não há pessoas cadastradas";
                 }
                 ?>
@@ -87,3 +87,13 @@ $p = new Pessoa("crudpdo", "localhost", "root", "");
 </body>
 
 </html>
+<?php
+//após o envio do ID na pagina index.php vamos pegar o mesmo da seguinte forma
+if (isset($_GET['id'])) { //se a variavel GET foi enviada
+    $id_pessoa = addslashes($_GET['id']); // salvamos em uma variavel nova sempre com o addslasches, o nome fica a seu critério!
+    $p->excluirPessoa($id_pessoa); // enviamos para a função que foi criada para excluir 
+
+    //apos a exclusao é necessario atualizar a página, podemos usar a função header('location:index.php) que direciona para um local.
+    header("location: index.php"); //estava dando erro com o header, pois caso você nao acrescente o espaço entre location: e o index.php ele nao reconhece o comando!
+}
+?>
