@@ -18,6 +18,13 @@ $p = new Pessoa("crudpdo", "localhost", "root", "");
 
 <body>
     <div class="sessoes">
+        <?php
+            if(isset($_GET['id_update'])){//se existe o id_update irá:
+                $id_att = addslashes($_GET['id_update']);//nova variavel para armazenar a info do campo via GET
+                $res=$p->buscarDadosPessoa($id_att); //vai receber o array proveniente da função buscaDadosPessoa
+
+            }
+        ?>
         <section id="esquerdo">
             <?php
             //colher todas as infos que foram colocadas nos inputs (caixinhas)
@@ -40,12 +47,12 @@ $p = new Pessoa("crudpdo", "localhost", "root", "");
             <form action="" method="post">
                 <h2>Cadastrar Pessoa</h2>
                 <label for="nome">Nome</label>
-                <input type="text" name="nome" id="nome">
+                <input type="text" name="nome" id="nome" value="<?php if(isset($res)){echo $res['nome'];}//Para aparecer as informações que ja estavam salvas, devemos fazer:?>">
                 <label for="telefone">Telefone</label>
-                <input type="text" name="telefone" id="telefone">
+                <input type="text" name="telefone" id="telefone" value="<?php if(isset($res)){echo $res['telefone'];}//Para aparecer as informações que ja estavam salvas, devemos fazer:?>">
                 <label for="email">Email</label>
-                <input type="email" name="email" id="email">
-                <input type="submit" value="Cadastrar">
+                <input type="email" name="email" id="email" value="<?php if(isset($res)){echo $res['email'];}//Para aparecer as informações que ja estavam salvas, devemos fazer:?>">
+                <input type="submit" value="<?php if(isset($res)){echo "Atualizar";}else{echo "Cadastrar";}?>">
             </form>
         </section>
         <section id="direito">
@@ -69,7 +76,7 @@ $p = new Pessoa("crudpdo", "localhost", "root", "");
                         }
                 ?>
                         <td> 
-                            <a href="">Editar</a>
+                            <a href="index.php?id_update=<?php echo $dados[$i]['id'];?>">Editar</a>
                             <a href="index.php?id=<?php echo $dados[$i]['id']; //ao colocar a propria pagina eu estou atualizando ela e ao atualizar queremos ter como retorno um ID de cada pessoa, ao colocar '?id=' estamos criando um metodo GET e sempre que fazemos isso em um link nós estamos criando uma variável que pode ser pega atraves do GET. Abrimos a tag PHP depos do id para acessarmos o array onde os dados de cada pessoa está armazenado, no caso o array $dados que a cada interação [$i] mostrara o ['id'] da pessoa.
                             ?>">Excluir</a>
                         </td>
