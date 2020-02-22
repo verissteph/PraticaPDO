@@ -48,4 +48,14 @@ Class Pessoa{
         $cmd->bindValue(":id",$id); //atribuindo ao :id o valor que a variavel $id receber
         $cmd->execute();
     }
-}
+    //metodo para PROCURAR os dados de uma pessoa a partir do seu ID e mostrar no campo quando escolher editar.
+    public function buscarDadosPessoa($id){
+    $res=[]; //para prevenir erros, determinamos que $res é um array vazio caso nao venha nehum dado do BD
+    $cmd = $this->pdo->prepare("SELECT * FROM pessoa WHERE id=:id");
+    $cmd->bindValue(":id",$id);
+    $cmd->execute();
+    $res=$cmd->fetch(PDO::FETCH_ASSOC); // aqui estamos usando o fetch ao inves do fetchAll porque queremos os dados de uma única pessoa.
+    return $res;
+    }
+    }
+
