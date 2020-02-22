@@ -26,14 +26,16 @@ $p = new Pessoa("crudpdo", "localhost", "root", "");
                     $telefone = addslashes($_POST['telefone']);
                     $email = addslashes($_POST['email']);
                  //evitar erros antes de enviar para ser cadastrada
-                    if(!empty($nome) && !empty($telefone) && !empty($email)){ //se todos os campos estiverem preenchidos
+                    if( !empty($nome) && !empty($telefone) && !empty($email) ){ //se todos os campos estiverem preenchidos
                         //verificando se existe o cadastro e cadastrando 
                         if(!$p->cadastrarPessoa($nome,$telefone,$email)){ //se o retorno da função for FALSE, nós saberemos que já existe o email cadastrado
                             echo "Email ja cadastrado";
-                        } else {
-                        echo "Preencha todos os campos!";
                         }
-                        }
+                        } 
+                        else 
+                        {
+                         echo "Preencha todos os campos!";
+                            }
                     }
                 
             ?>
