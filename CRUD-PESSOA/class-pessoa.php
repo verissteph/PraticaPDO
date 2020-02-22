@@ -3,6 +3,7 @@ Class Pessoa{
     private $pdo;
     //terá 6 funções
     //conexão com o BD orientado a obj, passaremos como parametro para o construtor
+    
     public function __construct($dbname,$host,$user,$senha)
     {
         try{
@@ -41,5 +42,10 @@ Class Pessoa{
             return true; //a pessoa não está cadastrada no BD AINDA
         }
     }
+    //metodo para EXCLUIR quando apertar no botão, usaremos o mais convecional que é excluindo pelo ID de cada pessoa cadastrada.
+    public function excluirPessoa($id){
+        $cmd = $this->pdo->prepare("DELETE FROM pessoa WHERE id=:id"); //deletando da tabela pessoa onde o id está como :id.
+        $cmd->bindValue(":id",$id); //atribuindo ao :id o valor que a variavel $id receber
+        $cmd->execute();
+    }
 }
-?>
