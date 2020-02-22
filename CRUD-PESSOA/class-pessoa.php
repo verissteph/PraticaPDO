@@ -31,14 +31,14 @@ Class Pessoa{
         $cmd->execute();
 
         if($cmd ->rowCount() > 0) { // o email já existe no BD
-            return false;
+            return false; //a pessoa ja ta cadastrada
         } else{ //email nao existe no BD e então irá cadastrar a partir do codigo abaixo.
             $cmd = $this ->pdo->prepare("INSERT INTO pessoa(nome,telefone,email)VALUES(:nome,:tel,:email)");
             $cmd->bindValue(":nome",$nome);
             $cmd->bindValue(":tel",$telefone);
             $cmd->bindValue(":email",$email);
             $cmd->execute();
-            return true;
+            return true; //a pessoa não está cadastrada no BD AINDA
         }
     }
 }
