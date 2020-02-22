@@ -18,8 +18,8 @@ Class Pessoa{
     }
     //metodo que vai buscar todos os dados do BD e mostrar no lado direito da tela
     public function buscarDados(){
-        $res=[];
-        $cmd = $this->pdo ->prepare("SELECT * FROM pessoa ORDER BY nome");
+        $res=array();
+        $cmd = $this->pdo ->query("SELECT * FROM pessoa ORDER BY nome"); // utilizamos a query por não precisarmos susbtituir valores, estamos agindo diretamente como se fosse no BD
         $res = $cmd ->fetchAll(PDO::FETCH_ASSOC);
         return $res;
     }
