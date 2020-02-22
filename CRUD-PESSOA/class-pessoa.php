@@ -23,5 +23,23 @@ Class Pessoa{
         $res = $cmd ->fetchAll(PDO::FETCH_ASSOC);
         return $res;
     }
+    //metodo para cadastrar pessoas ao banco de dados e mostrar no lado direito da tela, caso feito com sucesso
+    public function cadastrarPessoa($nome,$telefone,$email){
+        //antes de cadastrar é preciso verificar se já existe no BD
+        $cmd = $this ->pdo->prepare("SELECT id FROM pessoa WHERE email=:email");
+        $cmd->bindValue(":email",$email); //substituindo o que tem no bd pelo que ta em $email
+        $cmd->execute();
+
+        if($cmd ->rowCount() > 0) { // o email já existe no BD
+            return false;
+        } else{ //email nao existe no BD e então irá cadastrar a partir do codigo abaixo.
+            $cmd = $this ->pdo->prepare("INSERT INTO pessoa(nome,telefone,email)VALUES(:nome,:tel,:email)");
+            $cmd->bindValue(":nome",$nome);
+            $cmd->bindValue(":tel",$telefone);
+            $cmd->bindValue(":email",$email);
+            $cmd->execute();
+            return true;
+        }
+    }
 }
 ?>
