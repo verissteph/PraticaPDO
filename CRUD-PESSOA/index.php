@@ -17,29 +17,44 @@ $p = new Pessoa("crudpdo", "localhost", "root", "");
 </head>
 
 <body>
-    <div class="sessoes">
-        <?php
-            if(isset($_GET['id_update'])){//se existe o id_update irá:
-                $id_att = addslashes($_GET['id_update']);//nova variavel para armazenar a info do campo via GET
-                $res=$p->buscarDadosPessoa($id_att); //vai receber o array proveniente da função buscaDadosPessoa
+    <?php
+    if (isset($_GET['id_update'])) { //se existe o id_update, ou seja, se a pessoa clicou em EDITAR significa que ela vai atualizar a informçao e logo em seguida clicar no botão atualizar, então acontecerá:
+        $id_att = addslashes($_GET['id_update']); //nova variavel para armazenar a info do campo via GET
+        $res = $p->buscarDadosPessoa($id_att); //vai receber o array proveniente da função buscaDadosPessoa
 
-            }
-        ?>
+    }
+    ?>
+    <div class="sessoes">
         <section id="esquerdo">
             <?php
-            //colher todas as infos que foram colocadas nos inputs (caixinhas)
-            if (isset($_POST['nome'])) { //se existir algo no campo nome
-                $nome = addslashes($_POST['nome']); // addslasches serve para manter a info mais segura, ela introduz caract especiais 
-                $telefone = addslashes($_POST['telefone']);
-                $email = addslashes($_POST['email']);
-                //evitar erros antes de enviar para ser cadastrada
-                if (!empty($nome) && !empty($telefone) && !empty($email)) { //se todos os campos estiverem preenchidos
-                    //verificando se existe o cadastro e cadastrando 
-                    if (!$p->cadastrarPessoa($nome, $telefone, $email)) { //se o retorno da função for FALSE, nós saberemos que já existe o email cadastrado
-                        echo "Email ja cadastrado";
+            //coletar todas as infos que foram colocadas nos inputs (caixinhas)
+            if (isset($_POST['nome'])) { //se existir algo no campo nome. Significa que a pessoa clicou no botão CADASTRAR ou EDITAR
+                //------------------------------------VAI EDITAR---------------------------//
+                if (isset($_GET['id_update']) && (!empty($_GET['id_update']))) { //se existir o id_update que só aparece qnd clicamos no editar, VAI EDITAR A INFO
+                    $id_att = addslashes($_GET['id_update']);
+                    $nome = addslashes($_POST['nome']);
+                    $telefone = addslashes($_POST['telefone']);
+                    $email = addslashes($_POST['email']);
+                    if (!empty($nome) && !empty($telefone) && !empty($email)) {
+                        //AQUI ESTÁ DANDO O ERRO --- CORREÇÃO: Estava chamando a função errada!
+                        $p->atualizarDados($id_att, $nome, $telefone, $email);
+                        header('location: index.php'); //Para quando apertar o atualizar e a info já tiver sido atualizada, ele irá f5 da pagina e o botão ''cadastrar'' irá aparecer como se fosse o inicio da pagina dnv
+                    } else {
+                        echo "Preencha todos os campos";
                     }
-                } else {
-                    echo "Preencha todos os campos!";
+                } else { //caso contrario ----------------------VAI CADASTRAR--------------------
+                    $nome = addslashes($_POST['nome']); // addslasches serve para manter a info mais segura, ela introduz caract especiais 
+                    $telefone = addslashes($_POST['telefone']);
+                    $email = addslashes($_POST['email']);
+                    //evitar erros antes de enviar para ser cadastrada
+                    if (!empty($nome) && !empty($telefone) && !empty($email)) { //se todos os campos estiverem preenchidos
+                        //verificando se existe o cadastro e cadastrando 
+                        if (!$p->cadastrarPessoa($nome, $telefone, $email)) { //se o retorno da função for FALSE, nós saberemos que já existe o email cadastrado
+                            echo "Email ja cadastrado";
+                        }
+                    } else {
+                        echo "Preencha todos os campos!";
+                    }
                 }
             }
 
@@ -47,12 +62,25 @@ $p = new Pessoa("crudpdo", "localhost", "root", "");
             <form action="" method="post">
                 <h2>Cadastrar Pessoa</h2>
                 <label for="nome">Nome</label>
-                <input type="text" name="nome" id="nome" value="<?php if(isset($res)){echo $res['nome'];}//Para aparecer as informações que ja estavam salvas, devemos fazer:?>">
+                <input type="text" name="nome" id="nome" value="<?php if (isset($res)) {
+                                                                    echo $res['nome'];
+                                                                } //Para aparecer as informações que ja estavam salvas, devemos fazer:
+                                                                ?>">
                 <label for="telefone">Telefone</label>
-                <input type="text" name="telefone" id="telefone" value="<?php if(isset($res)){echo $res['telefone'];}//Para aparecer as informações que ja estavam salvas, devemos fazer:?>">
+                <input type="text" name="telefone" id="telefone" value="<?php if (isset($res)) {
+                                                                            echo $res['telefone'];
+                                                                        } //Para aparecer as informações que ja estavam salvas, devemos fazer:
+                                                                        ?>">
                 <label for="email">Email</label>
-                <input type="email" name="email" id="email" value="<?php if(isset($res)){echo $res['email'];}//Para aparecer as informações que ja estavam salvas, devemos fazer:?>">
-                <input type="submit" value="<?php if(isset($res)){echo "Atualizar";}else{echo "Cadastrar";}?>">
+                <input type="email" name="email" id="email" value="<?php if (isset($res)) {
+                                                                        echo $res['email'];
+                                                                    } //Para aparecer as informações que ja estavam salvas, devemos fazer:
+                                                                    ?>">
+                <input type="submit" value="<?php if (isset($res)) {
+                                                echo "Atualizar";
+                                            } else {
+                                                echo "Cadastrar";
+                                            } ?>">
             </form>
         </section>
         <section id="direito">
@@ -75,10 +103,10 @@ $p = new Pessoa("crudpdo", "localhost", "root", "");
                             }
                         }
                 ?>
-                        <td> 
-                            <a href="index.php?id_update=<?php echo $dados[$i]['id'];?>">Editar</a>
+                        <td>
+                            <a href="index.php?id_update=<?php echo $dados[$i]['id']; ?>">Editar</a>
                             <a href="index.php?id=<?php echo $dados[$i]['id']; //ao colocar a propria pagina eu estou atualizando ela e ao atualizar queremos ter como retorno um ID de cada pessoa, ao colocar '?id=' estamos criando um metodo GET e sempre que fazemos isso em um link nós estamos criando uma variável que pode ser pega atraves do GET. Abrimos a tag PHP depos do id para acessarmos o array onde os dados de cada pessoa está armazenado, no caso o array $dados que a cada interação [$i] mostrara o ['id'] da pessoa.
-                            ?>">Excluir</a>
+                                                    ?>">Excluir</a>
                         </td>
                 <?php
                         echo "</tr>";
@@ -88,19 +116,19 @@ $p = new Pessoa("crudpdo", "localhost", "root", "");
                     echo "Ainda não há pessoas cadastradas";
                 }
                 ?>
+                <?php
+                //após o envio do ID na pagina index.php vamos pegar o mesmo da seguinte forma
+                if (isset($_GET['id'])) { //se a variavel GET foi enviada
+                    $id_pessoa = addslashes($_GET['id']); // salvamos em uma variavel nova sempre com o addslasches, o nome fica a seu critério!
+                    $p->excluirPessoa($id_pessoa); // enviamos para a função que foi criada para excluir 
+
+                    //apos a exclusao é necessario atualizar a página, podemos usar a função header('location:index.php) que direciona para um local.
+                    header("location: index.php"); //estava dando erro com o header, pois caso você nao acrescente o espaço entre location: e o index.php ele nao reconhece o comando!
+                }
+                ?>
             </table>
         </section>
     </div>
 </body>
 
 </html>
-<?php
-//após o envio do ID na pagina index.php vamos pegar o mesmo da seguinte forma
-if (isset($_GET['id'])) { //se a variavel GET foi enviada
-    $id_pessoa = addslashes($_GET['id']); // salvamos em uma variavel nova sempre com o addslasches, o nome fica a seu critério!
-    $p->excluirPessoa($id_pessoa); // enviamos para a função que foi criada para excluir 
-
-    //apos a exclusao é necessario atualizar a página, podemos usar a função header('location:index.php) que direciona para um local.
-    header("location: index.php"); //estava dando erro com o header, pois caso você nao acrescente o espaço entre location: e o index.php ele nao reconhece o comando!
-}
-?>
