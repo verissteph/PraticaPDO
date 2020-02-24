@@ -57,5 +57,13 @@ Class Pessoa{
     $res=$cmd->fetch(PDO::FETCH_ASSOC); // aqui estamos usando o fetch ao inves do fetchAll porque queremos os dados de uma única pessoa.
     return $res;
     }
+    public function atualizarDados($id,$nome,$telefone,$email){ //precisa de todas as variaveis como parametro, pois caso o usuário deseje pode editar todos os campos. O id está incluido pois será por ele que iremos puxar a pessoa a ser editada/atualizada.
+        $cmd = $this->pdo->prepare("UPDATE pessoa SET nome=:nome,telefone=:tel,email=:email WHERE id=:id");
+        $cmd->bindValue(":nome",$nome);
+        $cmd->bindValue(":tel",$telefone);
+        $cmd->bindValue(":email",$email);
+        $cmd->bindValue(":id",$id);
+        $cmd->execute();
+    }
     }
 
