@@ -40,6 +40,7 @@ $p = new Pessoa("crudpdo", "localhost", "root", "");
                         $p->atualizarDados($id_att, $nome, $telefone, $email);
                         header('location: index.php'); //Para quando apertar o atualizar e a info já tiver sido atualizada, ele irá f5 da pagina e o botão ''cadastrar'' irá aparecer como se fosse o inicio da pagina dnv
                     } else {
+
                         echo "Preencha todos os campos";
                     }
                 } else { //caso contrario ----------------------VAI CADASTRAR--------------------
@@ -62,24 +63,12 @@ $p = new Pessoa("crudpdo", "localhost", "root", "");
             <form action="" method="post">
                 <h2>Cadastrar Pessoa</h2>
                 <label for="nome">Nome</label>
-                <input type="text" name="nome" id="nome" value="<?php if (isset($res)) {
-                                                                    echo $res['nome'];
-                                                                } //Para aparecer as informações que ja estavam salvas, devemos fazer:
-                                                                ?>">
+                <input type="text" name="nome" id="nome" value="<?php if (isset($res)) {echo $res['nome'];} //Para aparecer as informações que ja estavam salvas, devemos fazer:?>">
                 <label for="telefone">Telefone</label>
-                <input type="text" name="telefone" id="telefone" value="<?php if (isset($res)) {
-                                                                            echo $res['telefone'];
-                                                                        } //Para aparecer as informações que ja estavam salvas, devemos fazer:
-                                                                        ?>">
+                <input type="text" name="telefone" id="telefone" value="<?php if (isset($res)) {echo $res['telefone'];} //Para aparecer as informações que ja estavam salvas, devemos fazer:?>">
                 <label for="email">Email</label>
-                <input type="email" name="email" id="email" value="<?php if (isset($res)) {
-                                                                        echo $res['email'];
-                                                                    } //Para aparecer as informações que ja estavam salvas, devemos fazer:
-                                                                    ?>">
-                <input type="submit" value="<?php if (isset($res)) {
-                                                echo "Atualizar";
-                                            } else {
-                                                echo "Cadastrar";
+                <input type="email" name="email" id="email" value="<?php if (isset($res)) {echo $res['email'];} //Para aparecer as informações que ja estavam salvas, devemos fazer:?>">
+                <input type="submit" value="<?php if (isset($res)) {echo "Atualizar";} else {echo "Cadastrar";
                                             } ?>">
             </form>
         </section>
@@ -108,12 +97,14 @@ $p = new Pessoa("crudpdo", "localhost", "root", "");
                             <a href="index.php?id=<?php echo $dados[$i]['id']; //ao colocar a propria pagina eu estou atualizando ela e ao atualizar queremos ter como retorno um ID de cada pessoa, ao colocar '?id=' estamos criando um metodo GET e sempre que fazemos isso em um link nós estamos criando uma variável que pode ser pega atraves do GET. Abrimos a tag PHP depos do id para acessarmos o array onde os dados de cada pessoa está armazenado, no caso o array $dados que a cada interação [$i] mostrara o ['id'] da pessoa.
                                                     ?>">Excluir</a>
                         </td>
-                <?php
+                    <?php
                         echo "</tr>";
                         //faz o tr dentro do FOR porque precisa repetir os botoes a cada linha repetida 
                     }
                 } else { //senao se o array está vazio
-                    echo "Ainda não há pessoas cadastradas";
+                    
+                    
+                       echo "Ainda não há pessoas cadastradas!";
                 }
                 ?>
                 <?php
